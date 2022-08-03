@@ -1,12 +1,12 @@
-{% extends base.html %}
+{% extends "base.html" %}
 {% block content %}
-<div class="container">
-    <span>
-        
-    </span>
-    {% if usuario==marcos}
-    <h1>Hola Gran Usuario {{usuario}}</h1>
+<p><a href="{{ url_for('edad') }}">Edad</a></p>
+<p><a href="{{ url_for('apellido') }}">Apellido</a></p>
+
+    {% if "Marcos" in nombre %}
+    <h2>Hola Gran Usuario {{nombre}}</h2>
     {%else%}
-    <h3>Hola {usuario}</h3>
+    <h3>Hola {{nombre}}</h3>
+    {% endif %}
 </div>
 {% endblock %}
