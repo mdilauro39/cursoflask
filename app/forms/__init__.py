@@ -12,6 +12,7 @@ class LoginForm(FlaskForm):
 class IngresarPersonalForm(FlaskForm):
     nombre = StringField('Nombre', validators=[DataRequired('Este campo es requerido')])
     apellido = StringField('Apellido', validators=[DataRequired('Este campo es requerido')])
+    contraseña = PasswordField('Contraseña', validators=[DataRequired('Este campo es requerido')])
     telefono = StringField('Telefono', validators=[])
     enviar = SubmitField('Agregar nuevo personal')
     cancelar = SubmitField('Cancelar', render_kw={'class': 'btn btn-secondary', 'formnovalidate': 'True'})

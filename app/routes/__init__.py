@@ -13,6 +13,7 @@ def index():
     if request.method == 'GET' and request.args.get('borrar'):
         eliminar_personal(request.args.get('borrar'))
         flash('Se ha eliminado el empleado', 'success')
+    print(get_personal())
     return render_template('index.html', titulo="Inicio", personal=get_personal())
 
 
@@ -23,8 +24,7 @@ def ingresar_personal():
     if personal_form.cancelar.data:  # si se apretó el boton cancelar, personal_form.cancelar.data será True
         return redirect(url_for('index'))
     if personal_form.validate_on_submit():
-        datos_nuevos = { 'nombre': personal_form.nombre.data, 'apellido': personal_form.apellido.data, 
-                         'telefono': personal_form.telefono.data }
+        datos_nuevos = { 'nombre': personal_form.nombre.data, 'apellido': personal_form.apellido.data, 'contraseña': personal_form.contraseña.data, 'telefono': personal_form.telefono.data }
         agregar_personal(datos_nuevos)
         flash('Se ha agregado un nuevo empleado', 'success')
         return redirect(url_for('index'))

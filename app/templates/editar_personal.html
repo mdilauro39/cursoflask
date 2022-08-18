@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% from 'bootstrap/form.html' import render_form %}
+
+{% block content %}
+  <h1>Editar empleado</h1>
+
+  <br>
+  <div class="row">
+    <div class="col-md-4">
+        {{ render_form(personal_form) }}
+    </div>
+  </div>
+
+  
+{% endblock %}
+
