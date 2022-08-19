@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField , DateTimeField
 from wtforms.validators import DataRequired
 
 
@@ -15,4 +15,10 @@ class IngresarPersonalForm(FlaskForm):
     contraseña = PasswordField('Contraseña', validators=[DataRequired('Este campo es requerido')])
     telefono = StringField('Telefono', validators=[])
     enviar = SubmitField('Agregar nuevo personal')
+    cancelar = SubmitField('Cancelar', render_kw={'class': 'btn btn-secondary', 'formnovalidate': 'True'})
+
+class IngresoPersonalForm(FlaskForm):
+    ingreso = DateTimeField('Ingreso')
+    egreso = DateTimeField('Egreso')
+    enviar = SubmitField('Agregar ingreso/egreso')
     cancelar = SubmitField('Cancelar', render_kw={'class': 'btn btn-secondary', 'formnovalidate': 'True'})

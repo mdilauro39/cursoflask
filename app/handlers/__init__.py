@@ -26,15 +26,11 @@ def validar_usuario(usuario, contraseña):
     :return: True si el usuario y la contraseña son correctos, False en caso contrario    
     """
     # Si el usuario y la contraseña ingresados son iguales a los almacenados en el archivo devuelve True
-    print(row)
     for i in row:
         if i[2] == usuario:
             return validar_contrasena(contraseña,i[4])
     return False
 
-def make_dicts(cursor, row):
-    return dict((cursor.description[idx][0], value)
-                for idx, value in enumerate(row))
 
 def get_personal():
     db = get_db()
@@ -52,25 +48,24 @@ def get_personal():
 def get_personal_por_id(id):
     db = get_db()
     cursor = db.cursor()
-    personal = "SELECT * FROM personal"
-    cursor.execute(personal)
-    db.close()
+    personal = "SELECT * FROM personal WHERE id=?"
+    cursor.execute(personal,(id,))
+    row = cursor.fetchall()
+   
     """Devuelve un diccionario con los datos del empleado con el id indicado
     Si el emplado no existe devuelve None
 
     :param id: id del empleado
     :return: diccionario con los datos del empleado
     """
-    lista_personal = personal # carga todos los usuarios
+    lista_personal = cursor # carga todos los usuarios
     for empleado in lista_personal:
-        if empleado['id'] == id:
+        if empleado[0] == id:
             return empleado
     return None
 
 
 def agregar_personal(datos_nuevos):
-    print(datos_nuevos)
-    print(datos_nuevos['nombre'])
     """
     Guarda los datos de un nuevo empleado en el archivo de personal
     """
@@ -82,14 +77,21 @@ def agregar_personal(datos_nuevos):
 
 
 def eliminar_personal(id):
+    print(id)
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("DELETE FROM personal WHERE id=?",(id,))
+    db.commit()
+
+def agregar_ingreso(datos_nuevos):
     """
-    Elimina el empleado con el id indicado
+    Guarda los datos de un nuevo empleado en el archivo de personal
     """
-    id = int(id)
-    with open('app/files/personal.json', 'r') as archivo:
-        lista_personal = json.load(archivo)  # carga todos los usuarios
-    # Crea una lista con los empleados que no tengan el id indicado
-    lista_personal = [p for p in lista_personal if p['id'] != id]
-    with open('app/files/personal.json', 'w') as archivo:
-        json.dump(lista_personal, archivo, indent=4)
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("INSERT INTO ingreso (ingreso) VALUES (?)",(datos_nuevos['ingreso'], datos_nuevos['egreso'])
+            )
+    db.commit()
+   
+
 

@@ -2,8 +2,8 @@ from app import app
 from flask import render_template, redirect, url_for, session, flash, request
 from app.auth import login_required
 
-from app.forms import LoginForm, IngresarPersonalForm
-from app.handlers import eliminar_personal, get_personal_por_id, validar_usuario, get_personal, agregar_personal
+from app.forms import *
+from app.handlers import *
 
 
 @app.route('/')  # http://localhost:5000/
@@ -13,8 +13,25 @@ def index():
     if request.method == 'GET' and request.args.get('borrar'):
         eliminar_personal(request.args.get('borrar'))
         flash('Se ha eliminado el empleado', 'success')
-    print(get_personal())
     return render_template('index.html', titulo="Inicio", personal=get_personal())
+
+@app.route('/editar-ingreso/<int:id_empleado>', methods=['GET', 'POST'])
+@login_required
+def editar_ingreso(id_empleado):
+    personal_form = IngresoPersonalForm(data=get_personal_por_id(id_empleado))
+    if personal_form.cancelar.data:  # si se apretó el boton cancelar, personal_form.cancelar.data será True
+        return redirect(url_for('index'))
+    if personal_form.validate_on_submit():
+        datos_nuevos = { 'ingreso': personal_form.ingreso.data, 'egreso': personal_form.egreso.data}
+        agregar_ingreso(datos_nuevos)
+        flash('Se ha agregado un nuevo ingreso/egreso', 'success')
+        return redirect(url_for('index'))
+    return render_template('ingreso.html', titulo="Personal", personal_form=personal_form)
+@app.route('/egreso/<int:id_empleado>', methods=['GET', 'POST'])
+@login_required
+def editar_egreso(id_empleado):
+    pass
+
 
 
 @app.route('/ingresar-personal', methods=['GET', 'POST'])
@@ -34,12 +51,12 @@ def ingresar_personal():
 @app.route('/editar-personal/<int:id_empleado>', methods=['GET', 'POST'])
 @login_required
 def editar_personal(id_empleado):
+    print(id_empleado)
     personal_form = IngresarPersonalForm(data=get_personal_por_id(id_empleado))
     if personal_form.cancelar.data:  # si se apretó el boton cancelar, personal_form.cancelar.data será True
         return redirect(url_for('index'))
     if personal_form.validate_on_submit():
-        datos_nuevos = { 'nombre': personal_form.nombre.data, 'apellido': personal_form.apellido.data, 
-                         'telefono': personal_form.telefono.data }
+        datos_nuevos = { 'nombre': personal_form.nombre.data, 'apellido': personal_form.apellido.data, 'contraseña': personal_form.contraseña.data, 'telefono': personal_form.telefono.data }
         eliminar_personal(id_empleado)  # Eliminamos el empleado antiguo
         agregar_personal(datos_nuevos)  # Agregamos el nuevo empleado
         flash('Se ha editado el empleado exitosamente', 'success')
