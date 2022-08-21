@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField , DateTimeField
+from wtforms import StringField, PasswordField, SubmitField , DateTimeField, IntegerField
 from wtforms.validators import DataRequired
 
 
@@ -12,13 +12,18 @@ class LoginForm(FlaskForm):
 class IngresarPersonalForm(FlaskForm):
     nombre = StringField('Nombre', validators=[DataRequired('Este campo es requerido')])
     apellido = StringField('Apellido', validators=[DataRequired('Este campo es requerido')])
-    contraseña = PasswordField('Contraseña', validators=[DataRequired('Este campo es requerido')])
-    telefono = StringField('Telefono', validators=[])
+    telefono = StringField('Telefono', validators=[DataRequired('Este campo es requerido')])
+    dni = IntegerField('dni',validators=[DataRequired('Este campo es requerido')])
+    motivo = StringField('motivo', validators=[DataRequired('Este campo es requerido')])
     enviar = SubmitField('Agregar nuevo personal')
     cancelar = SubmitField('Cancelar', render_kw={'class': 'btn btn-secondary', 'formnovalidate': 'True'})
 
-class IngresoPersonalForm(FlaskForm):
-    ingreso = DateTimeField('Ingreso')
-    egreso = DateTimeField('Egreso')
-    enviar = SubmitField('Agregar ingreso/egreso')
+class EditarPersonalForm(FlaskForm): 
+    nombre = StringField('Nombre', validators=[DataRequired('Este campo es requerido')])
+    apellido = StringField('Apellido', validators=[DataRequired('Este campo es requerido')])
+    telefono = StringField('Telefono',validators=[DataRequired('Este campo es requerido')])
+    dni = IntegerField('dni', validators=[DataRequired('Este campo es requerido')])
+    motivo = StringField('motivo', validators=[DataRequired('Este campo es requerido')])
+    enviar = SubmitField('Agregar nuevo personal')
     cancelar = SubmitField('Cancelar', render_kw={'class': 'btn btn-secondary', 'formnovalidate': 'True'})
+

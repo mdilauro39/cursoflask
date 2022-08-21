@@ -15,24 +15,12 @@ def index():
         flash('Se ha eliminado el empleado', 'success')
     return render_template('index.html', titulo="Inicio", personal=get_personal())
 
-@app.route('/editar-ingreso/<int:id_empleado>', methods=['GET', 'POST'])
-@login_required
-def editar_ingreso(id_empleado):
-    personal_form = IngresoPersonalForm(data=get_personal_por_id(id_empleado))
-    if personal_form.cancelar.data:  # si se apretó el boton cancelar, personal_form.cancelar.data será True
-        return redirect(url_for('index'))
-    if personal_form.validate_on_submit():
-        datos_nuevos = { 'ingreso': personal_form.ingreso.data, 'egreso': personal_form.egreso.data}
-        agregar_ingreso(datos_nuevos)
-        flash('Se ha agregado un nuevo ingreso/egreso', 'success')
-        return redirect(url_for('index'))
-    return render_template('ingreso.html', titulo="Personal", personal_form=personal_form)
 @app.route('/egreso/<int:id_empleado>', methods=['GET', 'POST'])
 @login_required
-def editar_egreso(id_empleado):
-    pass
-
-
+def egreso(id_empleado):
+        agregar_egreso(id_empleado)
+        flash('el personal a egresado', 'success')
+        return redirect(url_for('index'))
 
 @app.route('/ingresar-personal', methods=['GET', 'POST'])
 @login_required
@@ -41,7 +29,7 @@ def ingresar_personal():
     if personal_form.cancelar.data:  # si se apretó el boton cancelar, personal_form.cancelar.data será True
         return redirect(url_for('index'))
     if personal_form.validate_on_submit():
-        datos_nuevos = { 'nombre': personal_form.nombre.data, 'apellido': personal_form.apellido.data, 'contraseña': personal_form.contraseña.data, 'telefono': personal_form.telefono.data }
+        datos_nuevos = { 'nombre': personal_form.nombre.data, 'apellido': personal_form.apellido.data, 'telefono': personal_form.telefono.data, 'dni': personal_form.dni.data,'motivo':personal_form.motivo.data }
         agregar_personal(datos_nuevos)
         flash('Se ha agregado un nuevo empleado', 'success')
         return redirect(url_for('index'))
@@ -51,14 +39,12 @@ def ingresar_personal():
 @app.route('/editar-personal/<int:id_empleado>', methods=['GET', 'POST'])
 @login_required
 def editar_personal(id_empleado):
-    print(id_empleado)
-    personal_form = IngresarPersonalForm(data=get_personal_por_id(id_empleado))
+    personal_form = EditarPersonalForm(data=get_personal_por_id(id_empleado))
     if personal_form.cancelar.data:  # si se apretó el boton cancelar, personal_form.cancelar.data será True
         return redirect(url_for('index'))
     if personal_form.validate_on_submit():
-        datos_nuevos = { 'nombre': personal_form.nombre.data, 'apellido': personal_form.apellido.data, 'contraseña': personal_form.contraseña.data, 'telefono': personal_form.telefono.data }
-        eliminar_personal(id_empleado)  # Eliminamos el empleado antiguo
-        agregar_personal(datos_nuevos)  # Agregamos el nuevo empleado
+        datos_nuevos = { 'nombre': personal_form.nombre.data, 'apellido': personal_form.apellido.data, 'telefono': personal_form.telefono.data, 'dni': personal_form.dni.data,'motivo':personal_form.motivo.data, 'id':id_empleado }
+        editarpersonal(datos_nuevos)  # Agregamos el nuevo empleado
         flash('Se ha editado el empleado exitosamente', 'success')
         return redirect(url_for('index'))
     return render_template('editar_personal.html', titulo="Personal", personal_form=personal_form)

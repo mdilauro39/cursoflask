@@ -1,6 +1,8 @@
 from collections import UserString
+import datetime
 import json
 import hashlib
+from sqlite3 import Timestamp
 from app.dbasedb import get_db
 
 def encode(contrasena):
@@ -30,7 +32,6 @@ def validar_usuario(usuario, contraseña):
         if i[2] == usuario:
             return validar_contrasena(contraseña,i[4])
     return False
-
 
 def get_personal():
     db = get_db()
@@ -71,8 +72,7 @@ def agregar_personal(datos_nuevos):
     """
     db = get_db()
     cursor = db.cursor()
-    cursor.execute("INSERT INTO personal (nombre,apellido,contraseña,telefono) VALUES (?, ? , ? ,?)",(datos_nuevos['nombre'], datos_nuevos['apellido'],encode(datos_nuevos['contraseña']),datos_nuevos['telefono'])
-            )
+    cursor.execute("INSERT INTO personal (nombre,apellido,telefono,dni,motivo) VALUES (?, ? , ? ,?,?)",(datos_nuevos['nombre'], datos_nuevos['apellido'],datos_nuevos['telefono'],datos_nuevos['dni'],datos_nuevos['motivo']))
     db.commit()
 
 
@@ -83,15 +83,24 @@ def eliminar_personal(id):
     cursor.execute("DELETE FROM personal WHERE id=?",(id,))
     db.commit()
 
-def agregar_ingreso(datos_nuevos):
+def agregar_egreso(datos_nuevos):
     """
     Guarda los datos de un nuevo empleado en el archivo de personal
     """
     db = get_db()
     cursor = db.cursor()
-    cursor.execute("INSERT INTO ingreso (ingreso) VALUES (?)",(datos_nuevos['ingreso'], datos_nuevos['egreso'])
-            )
+    egreso = datetime.datetime.now()
+    cursor.execute("UPDATE personal SET egreso = ? WHERE id = ?",(egreso,datos_nuevos))
+    db.commit()
+
+def editarpersonal(datos_nuevos):
+    """
+    Guarda los datos de un nuevo empleado en el archivo de personal
+    """
+    db = get_db()
+    cursor = db.cursor()
+    print(datos_nuevos)
+    cursor.execute("UPDATE personal SET nombre = ? apellido = ? telefono = ? dni = ? motivo = ? WHERE id = ?",(datos_nuevos),)
     db.commit()
    
-
 
