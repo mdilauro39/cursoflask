@@ -100,7 +100,7 @@ def editarpersonal(datos_nuevos):
     db = get_db()
     cursor = db.cursor()
     print(datos_nuevos)
-    cursor.execute("UPDATE personal SET nombre = ? apellido = ? telefono = ? dni = ? motivo = ? WHERE id = ?",(datos_nuevos),)
+    cursor.execute("UPDATE personal SET nombre = ?, apellido = ?, telefono = ?, dni = ?, motivo = ? WHERE id = ?",(datos_nuevos['nombre'], datos_nuevos['apellido'],datos_nuevos['telefono'],datos_nuevos['dni'],datos_nuevos['motivo'],datos_nuevos['id']))
     db.commit()
    
 

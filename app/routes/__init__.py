@@ -19,7 +19,7 @@ def index():
 @login_required
 def egreso(id_empleado):
         agregar_egreso(id_empleado)
-        flash('el personal a egresado', 'success')
+        flash('Se ha registrado el egreso del personal', 'success')
         return redirect(url_for('index'))
 
 @app.route('/ingresar-personal', methods=['GET', 'POST'])
@@ -44,7 +44,7 @@ def editar_personal(id_empleado):
         return redirect(url_for('index'))
     if personal_form.validate_on_submit():
         datos_nuevos = { 'nombre': personal_form.nombre.data, 'apellido': personal_form.apellido.data, 'telefono': personal_form.telefono.data, 'dni': personal_form.dni.data,'motivo':personal_form.motivo.data, 'id':id_empleado }
-        editarpersonal(datos_nuevos)  # Agregamos el nuevo empleado
+        editarpersonal(datos_nuevos)
         flash('Se ha editado el empleado exitosamente', 'success')
         return redirect(url_for('index'))
     return render_template('editar_personal.html', titulo="Personal", personal_form=personal_form)
